@@ -1,0 +1,5 @@
+[[sources]]
+name    = "carp-docs-mintlify"
+type    = "mintlify"
+path    = "sources/carp-docs-mintlify"
+enabled = true
