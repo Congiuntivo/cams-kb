@@ -1,0 +1,3 @@
+[submodule "sources/carp-docs-mintlify"]
+	path = sources/carp-docs-mintlify
+	url = git@github.com:carp-dk/carp-docs-mintlify.git
