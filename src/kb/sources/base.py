@@ -4,6 +4,8 @@ from abc import ABC, abstractmethod
 from collections.abc import Generator
 from pathlib import Path
 
+import pathspec
+
 from kb.config import SourceConfig
 from kb.models import RawDocument
 
@@ -12,6 +14,10 @@ class SourceAdapter(ABC):
     def __init__(self, config: SourceConfig, repo_root: Path) -> None:
         self.config = config
         self.root = repo_root / config.path
+        self._ignore_spec = pathspec.PathSpec.from_lines("gitwildmatch", config.ignore)
+
+    def _is_ignored(self, path: Path) -> bool:
+        return self._ignore_spec.match_file(str(path.relative_to(self.root)))
 
     @abstractmethod
     def discover(self) -> list[Path]:
@@ -27,4 +33,5 @@ class SourceAdapter(ABC):
 
     def extract_all(self) -> Generator[RawDocument, None, None]:
         for path in self.discover():
-            yield self.post_process(self.extract(path))
+            if not self._is_ignored(path):
+                yield self.post_process(self.extract(path))

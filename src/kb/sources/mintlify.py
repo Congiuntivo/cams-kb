@@ -1,11 +1,9 @@
 from __future__ import annotations
 
-from collections.abc import Generator
 from pathlib import Path
 
 from kb.models import RawDocument
 from kb.sources.base import SourceAdapter
-from kb.utils.console import warn
 from kb.utils.ids import document_id
 
 
@@ -30,10 +28,3 @@ class MintlifyAdapter(SourceAdapter):
                 body=text,
                 metadata={"length": len(text)},
             )
-
-    def extract_all(self) -> Generator[RawDocument, None, None]:
-        for path in self.discover():
-            if path.suffix == ".mdx":
-                yield self.post_process(self.extract(path))
-            else:
-                warn(f"Unsupported file type for Mintlify source: {path}")

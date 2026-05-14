@@ -11,6 +11,9 @@ class SourceConfig(BaseModel):
     type: str
     path: Path
     enabled: bool = True
+    ignore: list[str] = Field(
+        [], description="List of gitignore-style patterns to exclude from this source."
+    )
 
 
 class PipelineConfig(BaseModel):
