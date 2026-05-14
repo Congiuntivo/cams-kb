@@ -22,9 +22,10 @@ name    = "carp-docs-mintlify"
 type    = "mintlify"
 path    = "sources/carp-docs-mintlify"   # path relative to this file
 enabled = true
+ignore  = ["docs/api-reference/*", "openapi.json"]  # optional, gitignore-style patterns
 
 [pipeline]
 documents_path = "data/preprocessed/documents.jsonl"  # optional, this is the default
 ```
 
-Each source entry requires `name`, `type`, and `path`. Set `enabled = false` to skip a source without removing it.
+Each source entry requires `name`, `type`, and `path`. Set `enabled = false` to skip a source without removing it. `ignore` accepts gitignore-style patterns matched against paths relative to the source root.
