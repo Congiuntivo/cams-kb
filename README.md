@@ -1,6 +1,6 @@
-# kb — Knowledge Base Pipeline
+# kb — CARP Knowledge Base
 
-Builds retrieval indexes from raw documentation sources for use in the CARP system. Supports vector, hybrid, and classic TF-IDF indexes. Documents pass through three stages: pre-processing (extraction), splitting (chunking), and indexing.
+Pipeline for ingesting and indexing CARP documentation, built for retrieval. Supports vector, hybrid, and classic TF-IDF indexes. Documents pass through three stages: pre-processing (extraction), splitting (chunking), and indexing.
 
 ## Commands
 
