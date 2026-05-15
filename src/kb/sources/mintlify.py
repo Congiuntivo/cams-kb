@@ -4,6 +4,7 @@ from pathlib import Path
 
 from kb.models import RawDocument
 from kb.sources.base import SourceAdapter
+from kb.sources.mintlify_postprocess import transform_body
 from kb.utils.ids import document_id
 
 
@@ -18,13 +19,15 @@ class MintlifyAdapter(SourceAdapter):
 
     def extract(self, path: Path) -> RawDocument:
         source_path = str(path.relative_to(self.root))
-        with path.open(encoding="utf-8") as f:
-            text = f.read()
-            return RawDocument(
-                id=document_id(self.config.name, source_path),
-                source_name=self.config.name,
-                source_path=source_path,
-                title=path.stem,
-                body=text,
-                metadata={"length": len(text)},
-            )
+        text = path.read_text(encoding="utf-8")
+        return RawDocument(
+            id=document_id(self.config.name, source_path),
+            source_name=self.config.name,
+            source_path=source_path,
+            title=path.stem,
+            body=text,
+            metadata={"length": len(text)},
+        )
+
+    def post_process(self, doc: RawDocument) -> RawDocument:
+        return doc.model_copy(update={"body": transform_body(doc.body)})
