@@ -26,7 +26,7 @@ class MintlifyAdapter(SourceAdapter):
             source_path=source_path,
             title=path.stem,
             body=text,
-            metadata={"length": len(text)},
+            metadata={"length": len(text), "format": "markdown"},
         )
 
     def post_process(self, doc: RawDocument) -> RawDocument:
