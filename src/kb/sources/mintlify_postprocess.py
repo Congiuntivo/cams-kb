@@ -90,6 +90,15 @@ def _strip_wrappers(text: str) -> str:
     return _WRAPPER_PATTERN.sub(lambda m: m.group(2), text)
 
 
+def strip_frontmatter(text: str) -> str:
+    if not text.startswith("---"):
+        return text
+    end = text.find("---", 3)
+    if end == -1:
+        return text
+    return text[end + 3 :].lstrip("\n")
+
+
 def transform_body(text: str) -> str:
     """Convert Mintlify JSX components to semantically equivalent Markdown."""
     text = _strip_icons(text)

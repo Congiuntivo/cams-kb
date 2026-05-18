@@ -5,6 +5,7 @@ description = "CARP knowledge base pipeline, built for retrieval"
 requires-python = ">=3.12"
 authors = [{ name = "Congiuntivo", email = "simonedecarli19@gmail.com" }]
 dependencies = [
+  "langchain-text-splitters>=1.1.2",
   "orjson>=3.11.9",
   "pathspec>=1.1.1",
   "pydantic>=2.13.4",
