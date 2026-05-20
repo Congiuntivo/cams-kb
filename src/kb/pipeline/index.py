@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-from itertools import islice
 from pathlib import Path
-from typing import Generator
 
 from kb.config import Config, IndexingConfig
 from kb.embeddings.dense import embed_dense
@@ -10,6 +8,7 @@ from kb.embeddings.multi import embed_multi
 from kb.embeddings.sparse import embed_sparse
 from kb.models import Chunk, IndexPoint, IndexPointPayload, IndexPointVectors
 from kb.utils.console import error, info, success, warn
+from kb.utils.iter import batched
 from kb.utils.storage import load_chunks, save_index_points
 
 
@@ -38,7 +37,7 @@ def run_index_qdrant(
 
     points: list[IndexPoint] = []
     base_id = 0
-    for batch in _batched(chunks, index_config.batch_size):
+    for batch in batched(chunks, index_config.batch_size):
         batch_points = _embed_batch(batch, base_id, index_config)
         points.extend(batch_points)
         base_id += len(batch)
@@ -109,10 +108,3 @@ def _embed_batch(
         )
         for i, chunk in enumerate(batch)
     ]
-
-
-def _batched(items: list[Chunk], size: int) -> Generator[list[Chunk], None, None]:
-    """Yield successive batches of a given size from a list of items."""
-    it = iter(items)
-    while batch := list(islice(it, size)):
-        yield batch

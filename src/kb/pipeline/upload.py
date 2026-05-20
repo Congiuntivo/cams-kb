@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-from itertools import islice
 from pathlib import Path
-from typing import Generator
 
 from qdrant_client import QdrantClient
 from qdrant_client.models import (
@@ -20,6 +18,7 @@ from qdrant_client.models import (
 from kb.config import Config
 from kb.models import IndexPoint
 from kb.utils.console import error, info, success, warn
+from kb.utils.iter import batched
 from kb.utils.storage import load_index_points
 
 
@@ -48,7 +47,7 @@ def run_upload(config: Config, recreate: bool, repo_root: Path) -> None:
     )
 
     uploaded = 0
-    for batch in _batched(points, config.indexing.upload_batch_size):
+    for batch in batched(points, config.indexing.upload_batch_size):
         _upload_batch(client, collection_name, batch)
         uploaded += len(batch)
         info(f"\tUploaded {uploaded}/{len(points)} points")
@@ -121,11 +120,3 @@ def _upload_batch(client: QdrantClient, name: str, points: list[IndexPoint]) -> 
         for p in points
     ]
     client.upsert(collection_name=name, points=structs)
-
-
-def _batched(
-    items: list[IndexPoint], size: int
-) -> Generator[list[IndexPoint], None, None]:
-    it = iter(items)
-    while batch := list(islice(it, size)):
-        yield batch
