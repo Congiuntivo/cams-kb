@@ -4,13 +4,25 @@ Pipeline for ingesting and indexing CARP documentation, built for retrieval. Sup
 
 ## Commands
 
-`uv run kb pre-process` — extract clean documents from every enabled source and write them to JSONL.
+```bash
+# Extract clean documents from every enabled source and write them to JSONL.
+uv run kb pre-process
+```
 
-`uv run kb split` — chunk the pre-processed documents into retrievable units.
+```bash
+# Chunk the pre-processed documents into retrievable units.
+uv run kb split
+```
 
-`uv run kb index` — embed chunks with dense, sparse, and multi-vector models and serialize the resulting points.
+```bash
+# Embed chunks with dense, sparse, and multi-vector models and serialize the resulting points.
+uv run kb index
+```
 
-`uv run kb upload` — push the serialized points into Qdrant; pass `--recreate` to rebuild the collection from scratch.
+```bash
+# Push the serialized points into Qdrant; pass `--recreate` to rebuild the collection from scratch.
+uv run kb upload
+```
 
 All commands accept `--config` / `-c` to point at a non-default config file (default: `kb.toml`).
 
