@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import re
 
+import yaml
+
 _CALLOUT_TAGS = ("Note", "Warning", "Info", "Tip", "Check")
 _WRAPPER_TAGS = ("Steps", "Tabs", "Frame", "CardGroup", "AccordionGroup", "CodeGroup")
 
@@ -88,6 +90,17 @@ def _transform_cards(text: str) -> str:
 
 def _strip_wrappers(text: str) -> str:
     return _WRAPPER_PATTERN.sub(lambda m: m.group(2), text)
+
+
+def extract_frontmatter(text: str) -> dict[str, str]:
+    if not text.startswith("---"):
+        return {}
+    end = text.find("---", 3)
+    if end == -1:
+        return {}
+    raw = text[3:end].strip()
+    parsed = yaml.safe_load(raw) or {}
+    return {k: v for k, v in parsed.items() if isinstance(v, str)}
 
 
 def strip_frontmatter(text: str) -> str:

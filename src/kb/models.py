@@ -42,6 +42,7 @@ class IndexPointPayload(BaseModel):
     chunk_index: int
     text: str
     doc_title: str
+    doc_description: str
     source_path: str
     headers: dict[str, Any]
 

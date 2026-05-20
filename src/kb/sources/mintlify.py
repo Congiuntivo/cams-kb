@@ -4,7 +4,11 @@ from pathlib import Path
 
 from kb.models import RawDocument
 from kb.sources.base import SourceAdapter
-from kb.sources.mintlify_postprocess import strip_frontmatter, transform_body
+from kb.sources.mintlify_postprocess import (
+    extract_frontmatter,
+    strip_frontmatter,
+    transform_body,
+)
 from kb.utils.ids import document_id
 
 
@@ -41,6 +45,12 @@ class MintlifyAdapter(SourceAdapter):
         )
 
     def post_process(self, doc: RawDocument) -> RawDocument:
+        fm = extract_frontmatter(doc.body)
         body = strip_frontmatter(doc.body)
         body = transform_body(body)
-        return doc.model_copy(update={"body": body})
+        updates: dict = {"body": body}
+        if fm.get("title"):
+            updates["title"] = fm["title"]
+        if fm.get("description"):
+            updates["metadata"] = {**doc.metadata, "description": fm["description"]}
+        return doc.model_copy(update=updates)

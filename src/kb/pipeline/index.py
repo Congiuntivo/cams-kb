@@ -102,6 +102,7 @@ def _embed_batch(
                 chunk_index=chunk.chunk_index,
                 text=chunk.text,
                 doc_title=chunk.metadata.get("doc_title", ""),
+                doc_description=chunk.metadata.get("doc_description", ""),
                 source_path=chunk.metadata.get("source_path", ""),
                 headers=chunk.metadata.get("headers", {}),
             ),
