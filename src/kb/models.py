@@ -21,3 +21,31 @@ class Chunk(BaseModel):
     chunk_index: int
     text: str
     metadata: dict[str, Any] = {}
+
+
+class SparseVector(BaseModel):
+    indices: list[int]
+    values: list[float]
+
+
+class IndexPointVectors(BaseModel):
+    dense: list[float]
+    sparse: SparseVector
+    multi: list[list[float]]
+
+
+class IndexPointPayload(BaseModel):
+    chunk_id: str
+    doc_id: str
+    source_name: str
+    chunk_index: int
+    text: str
+    doc_title: str
+    source_path: str
+    headers: dict[str, Any]
+
+
+class IndexPoint(BaseModel):
+    id: int
+    vectors: IndexPointVectors
+    payload: IndexPointPayload

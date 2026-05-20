@@ -43,7 +43,7 @@ def run_split(config: Config, source_names: list[str] | None, repo_root: Path) -
         chunks.extend(doc_chunks)
 
     for source_name, count in sorted(counts.items()):
-        info(f"  [dim]{source_name}[/dim]: {count} chunks")
+        info(f"\t[dim]{source_name}[/dim]: {count} chunks")
 
     total = save_chunks(chunks, output_path)
     success(f"Saved [bold]{total}[/bold] chunks → {output_path}")

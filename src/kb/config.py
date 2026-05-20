@@ -35,9 +35,21 @@ class PipelineConfig(BaseModel):
     chunking: ChunkingConfig = ChunkingConfig()
 
 
+class IndexingConfig(BaseModel):
+    dense_model: str = Field("openai/text-embedding-3-small")
+    sparse_model: str = Field("Qdrant/bm25")
+    multi_model: str = Field("colbert-ir/colbertv2.0")
+    points_path: Path = Field(
+        Path("data/indexes/points.jsonl"),
+        description="Relative path to save index points, from the repository root.",
+    )
+    batch_size: int = Field(64, description="Number of chunks to embed per API call.")
+
+
 class Config(BaseModel):
     sources: list[SourceConfig]
     pipeline: PipelineConfig = PipelineConfig()
+    indexing: IndexingConfig = IndexingConfig()
 
     @property
     def enabled_sources(self) -> list[SourceConfig]:

@@ -1,3 +1,10 @@
+[indexing]
+dense_model = "ollama/mahonzhan/all-MiniLM-L6-v2"
+sparse_model = "Qdrant/bm25"
+multi_model = "colbert-ir/colbertv2.0"
+points_path = "data/indexes/points.jsonl"
+batch_size = 256
+
 [[sources]]
 name = "carp-docs-mintlify"
 type = "mintlify"
