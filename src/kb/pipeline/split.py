@@ -10,9 +10,11 @@ from langchain_text_splitters import (
 
 from kb.config import ChunkingConfig, Config
 from kb.models import Chunk, RawDocument
-from kb.utils.console import error, info, success
+from kb.utils.console import error, info, success, warn
 from kb.utils.ids import chunk_id
 from kb.utils.storage import load_documents, save_chunks
+
+_MIN_CONTENT_CHARS = 50
 
 _HEADERS_TO_SPLIT_ON = [
     ("#", "Header 1"),
@@ -41,6 +43,13 @@ def run_split(config: Config, source_names: list[str] | None, repo_root: Path) -
         doc_chunks = _split_document(doc, config.pipeline.chunking)
         counts[doc.source_name] += len(doc_chunks)
         chunks.extend(doc_chunks)
+
+    original_count = len(chunks)
+    chunks = [c for c in chunks if len(c.text.strip()) >= _MIN_CONTENT_CHARS]
+    if dropped := original_count - len(chunks):
+        warn(
+            f"Dropped [bold]{dropped}[/bold] near-empty chunk(s) (< {_MIN_CONTENT_CHARS} chars)."
+        )
 
     for source_name, count in sorted(counts.items()):
         info(f"\t[dim]{source_name}[/dim]: {count} chunks")

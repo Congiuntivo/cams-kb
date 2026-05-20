@@ -8,6 +8,7 @@ _CALLOUT_TAGS = ("Note", "Warning", "Info", "Tip", "Check")
 _WRAPPER_TAGS = ("Steps", "Tabs", "Frame", "CardGroup", "AccordionGroup", "CodeGroup")
 
 _ICON_PATTERN = re.compile(r"<Icon\s[^>]*/?>", re.DOTALL)
+_IMAGE_PATTERN = re.compile(r"!\[([^\]]*)\]\([^)]*\)")
 _CALLOUT_PATTERN = re.compile(
     r"<(" + "|".join(_CALLOUT_TAGS) + r")(?:\s[^>]*)?>(.+?)</\1>",
     re.DOTALL,
@@ -88,6 +89,14 @@ def _transform_cards(text: str) -> str:
     return _CARD_PATTERN.sub(replace, text)
 
 
+def _strip_images(text: str) -> str:
+    def _replace(m: re.Match) -> str:
+        alt = m.group(1).strip()
+        return alt if alt else ""
+
+    return _IMAGE_PATTERN.sub(_replace, text)
+
+
 def _strip_wrappers(text: str) -> str:
     return _WRAPPER_PATTERN.sub(lambda m: m.group(2), text)
 
@@ -115,6 +124,7 @@ def strip_frontmatter(text: str) -> str:
 def transform_body(text: str) -> str:
     """Convert Mintlify JSX components to semantically equivalent Markdown."""
     text = _strip_icons(text)
+    text = _strip_images(text)
     for _ in range(_MAX_PASSES):
         prev = text
         text = _transform_callouts(text)
