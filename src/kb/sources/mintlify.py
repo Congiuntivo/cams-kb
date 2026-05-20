@@ -8,6 +8,13 @@ from kb.sources.mintlify_postprocess import strip_frontmatter, transform_body
 from kb.utils.ids import document_id
 
 
+def _derive_package(path: Path, docs_root: Path) -> str:
+    parts = path.relative_to(docs_root).parts
+    if parts[0] == "packages" and len(parts) > 1:
+        return parts[1]
+    return parts[0]
+
+
 class MintlifyAdapter(SourceAdapter):
     SOURCE_TYPE = "mintlify"
 
@@ -26,7 +33,11 @@ class MintlifyAdapter(SourceAdapter):
             source_path=source_path,
             title=path.stem,
             body=text,
-            metadata={"length": len(text), "format": "markdown"},
+            metadata={
+                "length": len(text),
+                "format": "markdown",
+                "package": _derive_package(path, self.root / "docs"),
+            },
         )
 
     def post_process(self, doc: RawDocument) -> RawDocument:

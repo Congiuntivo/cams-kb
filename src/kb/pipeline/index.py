@@ -99,6 +99,7 @@ def _embed_batch(
                 chunk_id=chunk.id,
                 doc_id=chunk.doc_id,
                 source_name=chunk.source_name,
+                package=chunk.metadata.get("package", ""),
                 chunk_index=chunk.chunk_index,
                 text=chunk.text,
                 doc_title=chunk.metadata.get("doc_title", ""),

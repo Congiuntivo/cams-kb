@@ -4,6 +4,8 @@ sparse_model = "Qdrant/bm25"
 multi_model = "colbert-ir/colbertv2.0"
 points_path = "data/indexes/points.jsonl"
 batch_size = 256
+collection_name = "carp-docs"
+qdrant_url = "http://localhost:6333"
 
 [[sources]]
 name = "carp-docs-mintlify"

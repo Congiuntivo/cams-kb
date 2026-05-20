@@ -38,6 +38,7 @@ class IndexPointPayload(BaseModel):
     chunk_id: str
     doc_id: str
     source_name: str
+    package: str
     chunk_index: int
     text: str
     doc_title: str

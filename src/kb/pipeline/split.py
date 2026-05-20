@@ -92,6 +92,7 @@ def _split_document(doc: RawDocument, chunking: ChunkingConfig) -> list[Chunk]:
                         "headers": header_doc.metadata,
                         "doc_title": doc.title,
                         "source_path": doc.source_path,
+                        "package": doc.metadata.get("package", ""),
                     },
                 )
             )
@@ -108,6 +109,7 @@ def _split_document(doc: RawDocument, chunking: ChunkingConfig) -> list[Chunk]:
                     "headers": {},
                     "doc_title": doc.title,
                     "source_path": doc.source_path,
+                    "package": doc.metadata.get("package", ""),
                 },
             )
         )

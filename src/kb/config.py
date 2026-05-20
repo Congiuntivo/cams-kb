@@ -44,6 +44,13 @@ class IndexingConfig(BaseModel):
         description="Relative path to save index points, from the repository root.",
     )
     batch_size: int = Field(64, description="Number of chunks to embed per API call.")
+    upload_batch_size: int = Field(
+        32, description="Number of points per Qdrant upsert request."
+    )
+    collection_name: str = Field("knowledge-base")
+    qdrant_url: str = Field(
+        "http://localhost:6333", description="URL of the Qdrant instance."
+    )
 
 
 class Config(BaseModel):
