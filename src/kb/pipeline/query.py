@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import time
+
 from qdrant_client import QdrantClient
 from qdrant_client.models import (
     Fusion,
@@ -41,19 +43,33 @@ def run_query(
         f"(method=[bold]{method}[/bold], rerank=[bold]{rerank}[/bold], limit=[bold]{limit}[/bold])..."
     )
 
+    t0 = time.perf_counter()
     kwargs = _build_query_kwargs(
         text, method, rerank, limit, query_cfg.prefetch_limit, search_cfg
     )
+    t1 = time.perf_counter()
     results = client.query_points(
         collection_name=search_cfg.collection_name,
         **kwargs,
     ).points
+    t2 = time.perf_counter()
+
+    embed_ms = (t1 - t0) * 1000
+    search_ms = (t2 - t1) * 1000
+    total_ms = (t2 - t0) * 1000
+    latency_line = (
+        f"Latency — embed: [bold]{embed_ms:.0f} ms[/bold]  "
+        f"search: [bold]{search_ms:.0f} ms[/bold]  "
+        f"total: [bold]{total_ms:.0f} ms[/bold]"
+    )
 
     if not results:
         info("No results found.")
+        info(latency_line)
         return
 
     _display_results(results, full)
+    info(latency_line)
 
 
 def _build_query_kwargs(
