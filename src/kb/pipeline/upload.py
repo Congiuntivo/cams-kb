@@ -36,8 +36,8 @@ def run_upload(config: Config, recreate: bool, repo_root: Path) -> None:
         return
 
     dense_dim, multi_dim = _infer_dims(points[0])
-    collection_name = config.indexing.collection_name
-    client = QdrantClient(url=config.indexing.qdrant_url)
+    collection_name = config.search.collection_name
+    client = QdrantClient(url=config.search.qdrant_url)
 
     _ensure_collection(client, collection_name, dense_dim, multi_dim, recreate)
 
@@ -53,7 +53,7 @@ def run_upload(config: Config, recreate: bool, repo_root: Path) -> None:
         info(f"\tUploaded {uploaded}/{len(points)} points")
 
     success(
-        f"Uploaded [bold]{uploaded}[/bold] points → {collection_name} at {config.indexing.qdrant_url}"
+        f"Uploaded [bold]{uploaded}[/bold] points → {collection_name} at {config.search.qdrant_url}"
     )
 
 

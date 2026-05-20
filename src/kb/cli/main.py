@@ -6,6 +6,7 @@ import typer
 
 from kb.cli.index import app as index_app
 from kb.cli.preprocess import app as preprocess_app
+from kb.cli.query import app as query_app
 from kb.cli.split import app as split_app
 from kb.cli.upload import app as upload_app
 from kb.config import Config
@@ -15,6 +16,7 @@ app.add_typer(preprocess_app, name="pre-process")
 app.add_typer(split_app, name="split")
 app.add_typer(index_app, name="index")
 app.add_typer(upload_app, name="upload")
+app.add_typer(query_app, name="query")
 
 
 @app.callback()

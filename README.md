@@ -2,6 +2,8 @@
 
 Pipeline for ingesting and indexing CARP documentation, built for retrieval. Supports vector, hybrid, and classic TF-IDF indexes. Documents pass through four stages: pre-processing (extraction), splitting (chunking), indexing (embedding), and upload (Qdrant).
 
+Once uploaded, the collection can be queried directly with dense, sparse, or hybrid retrieval and optional ColBERT reranking.
+
 ## Commands
 
 ```bash
@@ -24,11 +26,19 @@ uv run kb index
 uv run kb upload
 ```
 
+```bash
+# Search the Qdrant collection with a text query.
+uv run kb query "what is CARP?"                          # hybrid + reranking (defaults from kb.toml)
+uv run kb query --method dense --limit 5 "install"       # dense-only, 5 results
+uv run kb query --method hybrid --no-rerank "auth"       # hybrid with RRF fusion, no reranking
+uv run kb query --method sparse "deploy"                 # BM25-only
+```
+
 All commands accept `--config` / `-c` to point at a non-default config file (default: `kb.toml`).
 
 ## Configuration
 
-`kb.toml` has three top-level tables: `sources` (one entry per documentation source), `pipeline` (extraction and chunking), and `indexing` (embeddings and Qdrant). The `pipeline` and `indexing` tables are optional — the snippet below shows the defaults.
+`kb.toml` has four top-level tables: `sources` (one entry per documentation source), `pipeline` (extraction and chunking), `search` (embedding models and Qdrant connection, shared by index and query), and `indexing` (pipeline-only batch and path settings). A `query` table holds retrieval defaults that can be overridden at the CLI. All tables except `sources` are optional — the snippet below shows the defaults.
 
 ```toml
 # kb.toml
@@ -48,15 +58,23 @@ chunks_path    = "data/split/chunks.jsonl"
 chunk_size    = 1000
 chunk_overlap = 150
 
+[search]
+dense_model     = "openai/text-embedding-3-small"
+sparse_model    = "Qdrant/bm25"
+multi_model     = "colbert-ir/colbertv2.0"
+collection_name = "knowledge-base"
+qdrant_url      = "http://localhost:6333"
+
 [indexing]
-dense_model       = "openai/text-embedding-3-small"
-sparse_model      = "Qdrant/bm25"
-multi_model       = "colbert-ir/colbertv2.0"
 points_path       = "data/indexes/points.jsonl"
 batch_size        = 64
 upload_batch_size = 32
-collection_name   = "knowledge-base"
-qdrant_url        = "http://localhost:6333"
+
+[query]
+method         = "hybrid"   # dense | sparse | hybrid
+rerank         = true       # apply ColBERT reranking (hybrid only)
+limit          = 10         # results returned
+prefetch_limit = 50         # candidates fetched per branch before fusion/reranking
 ```
 
 Each source entry requires `name`, `type`, and `path`. Set `enabled = false` to skip a source without removing it. `ignore` accepts gitignore-style patterns matched against paths relative to the source root.
@@ -91,3 +109,13 @@ Chunks are processed in batches of `batch_size`, and each point carries its full
 Connects to Qdrant at `qdrant_url` and ensures the target collection exists with three named vector configs: `dense` (cosine), `sparse` (with the `IDF` modifier so Qdrant computes BM25-style scoring), and `multi` (cosine + `MaxSim` comparator, with HNSW disabled since multi-vectors are reranked rather than ANN-searched).
 
 Points are read from `points.jsonl` and upserted in batches of `upload_batch_size`. Passing `--recreate` drops the existing collection before rebuilding it.
+
+### Query
+
+Connects to Qdrant and retrieves the top-N results for a text query. Three retrieval strategies are supported:
+
+- **`dense`** — embeds the query with the dense model and retrieves by cosine similarity.
+- **`sparse`** — embeds the query with the BM25 model and retrieves by IDF-weighted lexical overlap.
+- **`hybrid`** — runs both branches in parallel as prefetch queries, then either fuses them with Reciprocal Rank Fusion (`--no-rerank`) or reranks the fused candidates with ColBERT late-interaction MaxSim (`--rerank`).
+
+Results are displayed as a ranked table with score, document title, source path, and a text snippet.

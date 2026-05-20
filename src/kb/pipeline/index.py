@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from kb.config import Config, IndexingConfig
+from kb.config import Config, SearchConfig
 from kb.embeddings.dense import embed_dense
 from kb.embeddings.multi import embed_multi
 from kb.embeddings.sparse import embed_sparse
@@ -22,6 +22,7 @@ def run_index_qdrant(
         )
         return
 
+    search_config = config.search
     index_config = config.indexing
     output_path = repo_root / index_config.points_path
 
@@ -38,7 +39,7 @@ def run_index_qdrant(
     points: list[IndexPoint] = []
     base_id = 0
     for batch in batched(chunks, index_config.batch_size):
-        batch_points = _embed_batch(batch, base_id, index_config)
+        batch_points = _embed_batch(batch, base_id, search_config)
         points.extend(batch_points)
         base_id += len(batch)
         info(f"\tEmbedded {base_id}/{len(chunks)} chunks")
@@ -77,7 +78,7 @@ def _filter_chunks(chunks: list[Chunk], source_names: list[str] | None) -> list[
 
 
 def _embed_batch(
-    batch: list[Chunk], base_id: int, cfg: IndexingConfig
+    batch: list[Chunk], base_id: int, cfg: SearchConfig
 ) -> list[IndexPoint]:
     """Embed a batch of chunks into index points."""
     texts = [c.text for c in batch]
