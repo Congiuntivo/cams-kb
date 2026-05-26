@@ -12,8 +12,12 @@ class SourceConfig(BaseModel):
     type: str
     path: Path
     enabled: bool = True
-    ignore: list[str] = Field(
-        [], description="List of gitignore-style patterns to exclude from this source."
+    blacklist: list[str] = Field(
+        [], description="Gitignore-style patterns to exclude from this source."
+    )
+    whitelist: list[str] = Field(
+        [],
+        description="Gitignore-style patterns to include; if non-empty, only matching files are processed.",
     )
 
 

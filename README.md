@@ -48,7 +48,8 @@ name    = "carp-docs-mintlify"
 type    = "mintlify"
 path    = "sources/carp-docs-mintlify"          # relative to this file
 enabled = true
-ignore  = ["api-reference", "docs/index.mdx"]   # optional, gitignore-style patterns
+blacklist = ["api-reference", "docs/index.mdx"]  # optional, gitignore-style patterns to exclude
+whitelist = ["docs/**"]                          # optional, only include matching paths
 
 [pipeline]
 documents_path = "data/preprocessed/documents.jsonl"
@@ -77,13 +78,13 @@ limit          = 10         # results returned
 prefetch_limit = 50         # candidates fetched per branch before fusion/reranking
 ```
 
-Each source entry requires `name`, `type`, and `path`. Set `enabled = false` to skip a source without removing it. `ignore` accepts gitignore-style patterns matched against paths relative to the source root.
+Each source entry requires `name`, `type`, and `path`. Set `enabled = false` to skip a source without removing it. `blacklist` and `whitelist` both accept gitignore-style patterns matched against paths relative to the source root. `blacklist` excludes matching paths unconditionally; `whitelist`, when non-empty, restricts processing to paths that match at least one pattern (blacklist still wins).
 
 ## Pipeline
 
 ### Pre-process
 
-Each source `type` is bound to an adapter (`MintlifyAdapter`, …) via a registry. The adapter walks its root, applies the configured `ignore` patterns, parses each file into a `RawDocument` (id, title, body, source path, metadata), and runs a source-specific `post_process` hook for cleanup — for Mintlify, that means stripping YAML frontmatter and rewriting MDX components into plain markdown. Documents are streamed straight to `documents.jsonl`.
+Each source `type` is bound to an adapter (`MintlifyAdapter`, …) via a registry. The adapter walks its root, applies the configured `blacklist`/`whitelist` patterns, parses each file into a `RawDocument` (id, title, body, source path, metadata), and runs a source-specific `post_process` hook for cleanup — for Mintlify, that means stripping YAML frontmatter and rewriting MDX components into plain markdown. Documents are streamed straight to `documents.jsonl`.
 
 ### Split
 

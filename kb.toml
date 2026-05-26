@@ -20,4 +20,4 @@ name = "carp-docs-mintlify"
 type = "mintlify"
 path = "sources/carp-docs-mintlify"
 enabled = true
-ignore = ["api-reference", "docs/development.mdx", "docs/index.mdx"]
+blacklist = ["api-reference", "docs/development.mdx", "docs/index.mdx"]

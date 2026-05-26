@@ -14,10 +14,20 @@ class SourceAdapter(ABC):
     def __init__(self, config: SourceConfig, repo_root: Path) -> None:
         self.config = config
         self.root = repo_root / config.path
-        self._ignore_spec = pathspec.PathSpec.from_lines("gitwildmatch", config.ignore)
+        self._blacklist_spec = pathspec.PathSpec.from_lines(
+            "gitwildmatch", config.blacklist
+        )
+        self._whitelist_spec = pathspec.PathSpec.from_lines(
+            "gitwildmatch", config.whitelist
+        )
 
-    def _is_ignored(self, path: Path) -> bool:
-        return self._ignore_spec.match_file(str(path.relative_to(self.root)))
+    def _is_excluded(self, path: Path) -> bool:
+        rel = str(path.relative_to(self.root))
+        if self._blacklist_spec.match_file(rel):
+            return True
+        if self.config.whitelist and not self._whitelist_spec.match_file(rel):
+            return True
+        return False
 
     @abstractmethod
     def discover(self) -> list[Path]:
@@ -33,5 +43,5 @@ class SourceAdapter(ABC):
 
     def extract_all(self) -> Generator[RawDocument, None, None]:
         for path in self.discover():
-            if not self._is_ignored(path):
+            if not self._is_excluded(path):
                 yield self.post_process(self.extract(path))
