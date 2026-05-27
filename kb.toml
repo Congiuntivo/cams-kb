@@ -21,3 +21,103 @@ type = "mintlify"
 path = "sources/carp-docs-mintlify"
 enabled = true
 blacklist = ["api-reference", "docs/development.mdx", "docs/index.mdx"]
+
+[[sources]]
+name = "carp-health-flutter"
+type = "markdown"
+path = "sources/carp-health-flutter"
+enabled = true
+whitelist = ["README.md"]
+blacklist = ["CHANGELOG.md", "example/", "test/"]
+
+[[sources]]
+name = "carp-core-kotlin"
+type = "markdown"
+path = "sources/carp-core-kotlin"
+enabled = true
+whitelist = ["README.md", "docs/"]
+blacklist = []
+
+[[sources]]
+name = "carp-mobile-sensing"
+type = "markdown"
+path = "sources/carp-sensing-flutter/carp_mobile_sensing"
+enabled = true
+blacklist = ["CHANGELOG.md"]
+
+[[sources]]
+name = "carp-apps-package"
+type = "markdown"
+path = "sources/carp-sensing-flutter/packages/carp_apps_package"
+enabled = true
+blacklist = ["CHANGELOG.md"]
+
+[[sources]]
+name = "carp-audio-package"
+type = "markdown"
+path = "sources/carp-sensing-flutter/packages/carp_audio_package"
+enabled = true
+blacklist = ["CHANGELOG.md"]
+
+[[sources]]
+name = "carp-communication-package"
+type = "markdown"
+path = "sources/carp-sensing-flutter/packages/carp_communication_package"
+enabled = true
+blacklist = ["CHANGELOG.md"]
+
+[[sources]]
+name = "carp-connectivity-package"
+type = "markdown"
+path = "sources/carp-sensing-flutter/packages/carp_connectivity_package"
+enabled = true
+blacklist = ["CHANGELOG.md"]
+
+[[sources]]
+name = "carp-context-package"
+type = "markdown"
+path = "sources/carp-sensing-flutter/packages/carp_context_package"
+enabled = true
+blacklist = ["CHANGELOG.md"]
+
+[[sources]]
+name = "carp-esense-package"
+type = "markdown"
+path = "sources/carp-sensing-flutter/packages/carp_esense_package"
+enabled = true
+blacklist = ["CHANGELOG.md"]
+
+[[sources]]
+name = "carp-health-package"
+type = "markdown"
+path = "sources/carp-sensing-flutter/packages/carp_health_package"
+enabled = true
+blacklist = ["CHANGELOG.md"]
+
+[[sources]]
+name = "carp-movesense-package"
+type = "markdown"
+path = "sources/carp-sensing-flutter/packages/carp_movesense_package"
+enabled = true
+blacklist = ["CHANGELOG.md"]
+
+[[sources]]
+name = "carp-movisens-package"
+type = "markdown"
+path = "sources/carp-sensing-flutter/packages/carp_movisens_package"
+enabled = true
+blacklist = ["CHANGELOG.md"]
+
+[[sources]]
+name = "carp-polar-package"
+type = "markdown"
+path = "sources/carp-sensing-flutter/packages/carp_polar_package"
+enabled = true
+blacklist = ["CHANGELOG.md"]
+
+[[sources]]
+name = "carp-survey-package"
+type = "markdown"
+path = "sources/carp-sensing-flutter/packages/carp_survey_package"
+enabled = true
+blacklist = ["CHANGELOG.md"]

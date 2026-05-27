@@ -4,10 +4,12 @@ from pathlib import Path
 
 from kb.config import SourceConfig
 from kb.sources.base import SourceAdapter
+from kb.sources.markdown import MarkdownAdapter
 from kb.sources.mintlify import MintlifyAdapter
 
 _REGISTRY: dict[str, type[SourceAdapter]] = {
     MintlifyAdapter.SOURCE_TYPE: MintlifyAdapter,
+    MarkdownAdapter.SOURCE_TYPE: MarkdownAdapter,
 }
 
 

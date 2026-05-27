@@ -1,3 +1,13 @@
 [submodule "sources/carp-docs-mintlify"]
 	path = sources/carp-docs-mintlify
 	url = git@github.com:carp-dk/carp-docs-mintlify.git
+[submodule "sources/carp-health-flutter"]
+	path = sources/carp-health-flutter
+	url = git@github.com:carp-dk/carp-health-flutter.git
+[submodule "sources/carp-core-kotlin"]
+	path = sources/carp-core-kotlin
+	url = git@github.com:carp-dk/carp.core-kotlin.git
+	ignore = untracked
+[submodule "sources/carp-sensing-flutter"]
+	path = sources/carp-sensing-flutter
+	url = git@github.com:carp-dk/carp.sensing-flutter.git
