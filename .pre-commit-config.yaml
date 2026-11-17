@@ -21,6 +21,7 @@ repos:
     rev: v4.0.0-alpha.8
     hooks:
       - id: prettier
+        language_version: "20.19.0"
         types_or: [markdown, json]
   - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v4.2.0
