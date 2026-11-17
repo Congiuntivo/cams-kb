@@ -3,6 +3,8 @@ name = "kb"
 version = "0.1.0"
 description = "CARP knowledge base pipeline, built for retrieval"
 requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "Congiuntivo", email = "simonedecarli19@gmail.com" }]
 dependencies = [
   "fastembed>=0.3.0",

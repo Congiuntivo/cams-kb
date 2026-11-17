@@ -4,6 +4,26 @@ Pipeline for ingesting and indexing CARP documentation, built for retrieval. Sup
 
 Once uploaded, the collection can be queried directly with dense, sparse, or hybrid retrieval and optional ColBERT reranking.
 
+## Setup
+
+1. Clone with submodules:
+   ```bash
+   git clone --recurse-submodules <repo>
+   cd knowledge-base
+   ```
+2. Install dependencies with [uv](https://docs.astral.sh/uv/):
+   ```bash
+   uv sync --all-extras
+   ```
+3. Start a Qdrant instance (default: `http://localhost:6333`):
+   ```bash
+   docker run -p 6333:6333 qdrant/qdrant
+   ```
+4. Set any provider keys the dense model needs in `.env`
+   (e.g. `OPENAI_API_KEY`, `HF_TOKEN` for gated FastEmbed models).
+
+Then run the pipeline stages (see Commands).
+
 ## Commands
 
 ```bash
@@ -78,7 +98,7 @@ limit          = 10         # results returned
 prefetch_limit = 50         # candidates fetched per branch before fusion/reranking
 ```
 
-Each source entry requires `name`, `type`, and `path`. Set `enabled = false` to skip a source without removing it. `blacklist` and `whitelist` both accept gitignore-style patterns matched against paths relative to the source root. `blacklist` excludes matching paths unconditionally; `whitelist`, when non-empty, restricts processing to paths that match at least one pattern (blacklist still wins).
+Each source entry requires `name`, `type`, and `path`. `type` selects the adapter: `mintlify` for MDX docs with YAML frontmatter and MDX components, `markdown` for plain `.md` files. Set `enabled = false` to skip a source without removing it. `blacklist` and `whitelist` both accept gitignore-style patterns matched against paths relative to the source root. `blacklist` excludes matching paths unconditionally; `whitelist`, when non-empty, restricts processing to paths that match at least one pattern (blacklist still wins).
 
 ## Pipeline
 
@@ -120,3 +140,7 @@ Connects to Qdrant and retrieves the top-N results for a text query. Three retri
 - **`hybrid`** — runs both branches in parallel as prefetch queries, then either fuses them with Reciprocal Rank Fusion (`--no-rerank`) or reranks the fused candidates with ColBERT late-interaction MaxSim (`--rerank`).
 
 Results are displayed as a ranked table with score, document title, source path, and a text snippet.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
