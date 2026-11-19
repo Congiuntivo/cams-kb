@@ -143,4 +143,4 @@ Results are displayed as a ranked table with score, document title, source path,
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+Licensed under MIT; see [LICENSE](LICENSE).
